@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="dt-learn">
+    <output-path>$PROJECT_DIR$/out/artifacts/dt_learn</output-path>
+    <root id="archive" name="dt-learn.jar">
+      <element id="module-output" name="hw2sol" />
+    </root>
+  </artifact>
+</component>
