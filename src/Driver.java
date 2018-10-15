@@ -28,16 +28,16 @@ public class Driver {
 
         DataSet dataSet = null;
 
-        if (trainSetFile.equals("heart_train.arff") && testSetFile.equals("heart_test.arff")) {
-            dataSet = DataSet.HEART;
-        } else if (trainSetFile.equals("diabetes_train.arff") && testSetFile.equals("diabetes_test.arff")) {
-            dataSet = DataSet.DIABETES;
-        } else {
-            System.err.println("Invalid Input");
-            System.exit(-1);
-        }
+//        if (trainSetFile.equals("heart_train.arff") && testSetFile.equals("heart_test.arff")) {
+//            dataSet = DataSet.HEART;
+//        } else if (trainSetFile.equals("diabetes_train.arff") && testSetFile.equals("diabetes_test.arff")) {
+//            dataSet = DataSet.DIABETES;
+//        } else {
+//            System.err.println("Invalid Input");
+//            System.exit(-1);
+//        }
 
-        List<InstanceEntry> trainingData = arffFileReader.readArff(dataSet, DataType.TRAIN);
+        List<InstanceEntry> trainingData = arffFileReader.readArff(trainSetFile);
 
         DecisionTreeGenerator decisionTreeGenerator = new DecisionTreeGenerator();
         Node rootNode = new Node();
@@ -49,7 +49,7 @@ public class Driver {
 
         System.out.println("<Predictions for the Test Set Instances>");
 
-        List<InstanceEntry> testData = arffFileReader.readArff(dataSet, DataType.TEST);
+        List<InstanceEntry> testData = arffFileReader.readArff(testSetFile);
 
         int totalClassifications = 1;
         int classLabelIndex = testData.get(0).getFeatureValues().length - 1;

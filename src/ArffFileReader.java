@@ -1,19 +1,14 @@
-import entry.DiabetesEntry;
-import entry.HeartDiseaseEntry;
 import entry.InstanceEntry;
-import enums.DataSet;
-import enums.DataType;
+import enums.FeatureTags;
+import enums.FeatureType;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class ArffFileReader {
@@ -22,55 +17,56 @@ public class ArffFileReader {
     // TODO: and get the corresponding entry read. But as we are short on time and no marks for modularisation
     // TODO: so keeping this as a TODO for future. :P
 
-    public List<InstanceEntry> readArff(DataSet dataSet, DataType dataType) {
+    public List<InstanceEntry> readArff(String fileName) {
 
         List<InstanceEntry> arffEntries = new ArrayList<>();
-
-        String fileName;
-        if (dataSet.equals(DataSet.HEART)) {
-            fileName = dataType.equals(DataType.TRAIN) ? "heart_train.arff" : "heart_test.arff";
-        } else {
-            fileName = dataType.equals(DataType.TRAIN) ? "diabetes_train.arff" : "diabetes_test.arff";
+        FileReader file = null;
+        try {
+            file = new FileReader(fileName);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found " + fileName);
+            e.printStackTrace();
+            System.exit(-1);
         }
-
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream in = getClass().getClassLoader().getResourceAsStream(fileName);
-
-////        File file = new File(classLoader.getResource(fileName).getFile());
-//        File file = new File(fileName);
-//        try {
-//            FileInputStream fstream = new FileInputStream(fileName);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
 
         // This will reference one line at a time
         String line;
 
         try {
-//            // FileReader reads text files in the default encoding.
-//            FileReader fileReader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(file);
 
-//            // Always wrap FileReader in BufferedReader.
-//            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-
+            List<String> featureTags = new ArrayList<>();
+            List<String> featureTypes = new ArrayList<>();
+            HashMap<String, List<String>> priorityMap = new HashMap<>();
             while((line = bufferedReader.readLine()) != null) {
 
-                if (line.startsWith("@")) {
-                    // Current line is a comment. IGNORE
+                if (line.startsWith("@attribute")) {
+                    String[] header = line.split("'");
+                    if (header[2].equals(" real") || header[2].equals(" numeric")) {
+                        featureTypes.add(FeatureType.NUMERIC.name());
+                        featureTags.add(header[1].toUpperCase());
+                    } else {
+                        featureTypes.add(FeatureType.NOMINAL.name());
+                        if (header[1].equalsIgnoreCase("class")) {
+                            featureTags.add(FeatureTags.CLASSLABEL.name());
+                        } else {
+                            featureTags.add(header[1].toUpperCase());
+                        }
+                        header[2] = header[2].replace('{', ' ');
+                        header[2] = header[2].replace('}', ' ');
+                        header[2] = header[2].replaceAll("\\s+", "");
+                        String[] priorities = header[2].split(",");
+                        List<String> priorityList = Arrays.asList(priorities);
+                        priorityList.replaceAll(String::toUpperCase);
+                        priorityMap.put(header[1].toUpperCase(), priorityList);
+                    }
+                } else if (line.startsWith("@")) {
                     continue;
-                }
-
-                List<String> featureValues = Arrays.asList(line.split(","));
-                InstanceEntry instanceEntry;
-                if (dataSet.equals(DataSet.HEART)) {
-                    instanceEntry = new HeartDiseaseEntry(featureValues);
                 } else {
-                    instanceEntry = new DiabetesEntry(featureValues);
+                    List<String> featureValues = Arrays.asList(line.split(","));
+                    InstanceEntry instanceEntry = getGenericInstanceEntry(featureTags, featureTypes, priorityMap, featureValues);
+                    arffEntries.add(instanceEntry);
                 }
-                arffEntries.add(instanceEntry);
             }
             bufferedReader.close();
         }
@@ -84,5 +80,23 @@ public class ArffFileReader {
         }
 
         return arffEntries;
+    }
+
+    private InstanceEntry getGenericInstanceEntry(List<String> featureTags,
+                                                    List<String> featureTypes,
+                                                    HashMap<String, List<String>> priorityMap,
+                                                    List<String> featureValues) {
+
+        InstanceEntry instanceEntry = new InstanceEntry();
+
+        instanceEntry.setFeatureTags(featureTags.toArray(new String[featureTags.size()]));
+        instanceEntry.setFeatureTypes(featureTypes.toArray(new String[featureTypes.size()]));
+
+        featureValues.replaceAll(String::toUpperCase);
+        instanceEntry.setFeatureValues(featureValues.toArray(new String[featureValues.size()]));
+
+        instanceEntry.setPriorityMap(priorityMap);
+
+        return instanceEntry;
     }
 }

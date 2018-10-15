@@ -48,6 +48,7 @@ public class NominalSplitGenerator {
             Node childNode = new Node();
             childNode.setParentFeatureTag(root.getFeatureTag());
             childNode.setFeatureTag(childTag);
+            childNode.setPriorities(instanceEntries.get(0).getPriorityMap().get(root.getFeatureTag()));
             childNode.setFeatureType(root.getFeatureType());
             childNode.setDepth(root.getDepth()+1);
             childNode.setOperator(Operator.EQUAL.getDisplayName());

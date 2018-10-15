@@ -20,6 +20,7 @@ public class Node implements Cloneable {
     private boolean[] featuresUsedTillNow;
     private String parentClassLabel;
     private String classLabel;
+    private List<String> priorities;
 
     public String getParentFeatureTag() {
         return parentFeatureTag;
@@ -141,6 +142,14 @@ public class Node implements Cloneable {
         this.classLabel = classLabel;
     }
 
+    public List<String> getPriorities() {
+        return priorities;
+    }
+
+    public void setPriorities(List<String> priorities) {
+        this.priorities = priorities;
+    }
+
     public Node clone() {
         try {
             return (Node) super.clone();
@@ -167,6 +176,7 @@ public class Node implements Cloneable {
                 ", featuresUsedTillNow=" + Arrays.toString(featuresUsedTillNow) +
                 ", parentClassLabel='" + parentClassLabel + '\'' +
                 ", classLabel='" + classLabel + '\'' +
+                ", priorities=" + priorities +
                 '}';
     }
 }

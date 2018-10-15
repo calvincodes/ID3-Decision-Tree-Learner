@@ -1,9 +1,7 @@
 import entry.InstanceEntry;
-import enums.CP;
 import enums.ClassLabel;
 import enums.FeatureTags;
 import enums.FeatureType;
-import enums.THAL;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -138,6 +136,9 @@ public class DecisionTreeGenerator {
                 Node rootNode = new Node();
                 rootNode.setFeatureTag(instanceEntries.get(0).getFeatureTags()[i]);
                 rootNode.setFeatureType(instanceEntries.get(0).getFeatureTypes()[i]);
+                if (instanceEntries.get(0).getPriorityMap() != null) {
+                    rootNode.setPriorities(instanceEntries.get(0).getPriorityMap().get(rootNode.getFeatureTag()));
+                }
                 rootNode.setEntropy(
                         entropyCalculater.calculateEntropyForRootNodes(Double.valueOf(positives), Double.valueOf(negatives)));
                 rootNode.setPositives(positives);
@@ -173,6 +174,9 @@ public class DecisionTreeGenerator {
                 Node rootNode = new Node();
                 rootNode.setFeatureTag(instanceEntries.get(0).getFeatureTags()[i]);
                 rootNode.setFeatureType(instanceEntries.get(0).getFeatureTypes()[i]);
+                if (instanceEntries.get(0).getPriorityMap() != null) {
+                    rootNode.setPriorities(instanceEntries.get(0).getPriorityMap().get(rootNode.getFeatureTag()));
+                }
                 rootNode.setEntropy(
                         entropyCalculater.calculateEntropyForRootNodes(Double.valueOf(positives), Double.valueOf(negatives)));
                 rootNode.setPositives(positives);

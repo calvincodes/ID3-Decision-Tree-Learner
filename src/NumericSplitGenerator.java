@@ -67,6 +67,9 @@ public class NumericSplitGenerator {
         Node lessThanEqualChild = new Node();
         lessThanEqualChild.setParentFeatureTag(root.getFeatureTag());
         lessThanEqualChild.setFeatureTag(root.getFeatureTag());
+        if (instanceEntries.get(0).getPriorityMap() != null) {
+            lessThanEqualChild.setPriorities(instanceEntries.get(0).getPriorityMap().get(root.getFeatureTag()));
+        }
         lessThanEqualChild.setFeatureType(root.getFeatureType());
         lessThanEqualChild.setParentClassLabel(
                 root.getPositives() > root.getNegatives() ? ClassLabel.POSITIVE.name() : ClassLabel.NEGATIVE.name());
@@ -98,6 +101,9 @@ public class NumericSplitGenerator {
         Node greaterThanChild = new Node();
         greaterThanChild.setParentFeatureTag(root.getFeatureTag());
         greaterThanChild.setFeatureTag(root.getFeatureTag());
+        if (instanceEntries.get(0).getPriorityMap() != null) {
+            greaterThanChild.setPriorities(instanceEntries.get(0).getPriorityMap().get(root.getFeatureTag()));
+        }
         greaterThanChild.setFeatureType(root.getFeatureType());
         greaterThanChild.setParentClassLabel(
                 root.getPositives() > root.getNegatives() ? ClassLabel.POSITIVE.name() : ClassLabel.NEGATIVE.name());

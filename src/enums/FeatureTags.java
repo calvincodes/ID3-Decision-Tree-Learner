@@ -25,5 +25,15 @@ public enum FeatureTags {
     PEDI,
     // AGE,
 
-    CLASSLABEL;
+    CLASSLABEL,
+
+    GENERIC;
+
+    public static FeatureTags getValueOf(String value) {
+        try {
+            return FeatureTags.valueOf(value);
+        } catch (Exception ex) {
+            return FeatureTags.GENERIC;
+        }
+    }
 }
