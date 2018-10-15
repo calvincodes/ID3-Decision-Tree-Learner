@@ -1,6 +1,4 @@
 import entry.InstanceEntry;
-import enums.DataSet;
-import enums.DataType;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +24,7 @@ public class Driver {
         String testSetFile = args[1];
         m = Integer.parseInt(args[2]);
 
-        DataSet dataSet = null;
+//        DataSet dataSet = null;
 
 //        if (trainSetFile.equals("heart_train.arff") && testSetFile.equals("heart_test.arff")) {
 //            dataSet = DataSet.HEART;
